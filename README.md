@@ -1,9 +1,34 @@
 # Personal Tanstack Start Template
 
+- Bun
 - Tailwind V4
-- ESLint, Prettier, Husky, Lint-Staged
 - Drizzle-ORM + PostgreSQL + Supabase
 - Better-Auth
+- ESLint, Prettier, Husky, Lint-Staged
+
+# Setup
+
+1. Install dependencies
+
+```sh
+bun install
+```
+
+2. Copy `.env.example` to `.env.local` and fill in the environment variables
+3. Generate `drizzle` files and push to the database:
+
+```sh
+bun run db:generate
+bun run db:push
+```
+
+4. To start locally:
+
+```sh
+bun run dev
+```
+
+4. Check `package.json` for additional commands to run
 
 # Links
 

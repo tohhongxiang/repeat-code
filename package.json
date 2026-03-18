@@ -12,7 +12,9 @@
 		"test": "vitest run",
 		"prepare": "husky",
 		"lint": "eslint",
-		"check": "prettier --write . && eslint --fix"
+		"check": "prettier --write . && eslint --fix",
+		"db:generate": "bunx drizzle-kit generate",
+		"db:push": "bunx drizzle-kit push"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.3.0",
