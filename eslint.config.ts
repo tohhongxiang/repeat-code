@@ -21,6 +21,7 @@ const config = [
 			"no-shadow": "off",
 			"@typescript-eslint/no-unnecessary-condition": "off",
 			"react/react-in-jsx-scope": "off",
+			"import/order": "off",
 		},
 	},
 ];
