@@ -3,7 +3,7 @@ import { shikiToMonaco } from "@shikijs/monaco";
 import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 
-import { HIGHLIGHT_THEME, highlighter } from "@/lib/shiki";
+import { HIGHLIGHT_THEME, highlighter } from "@/lib/syntax-highlighter/shiki";
 
 import { useTheme } from "../../lib/theme/provider";
 

@@ -4,11 +4,21 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
 import CodeBlock from "@/components/markdown-renderer/code-block";
-import { HIGHLIGHT_THEME, highlighter } from "@/lib/shiki";
+import { HIGHLIGHT_THEME, highlighter } from "@/lib/syntax-highlighter/shiki";
+import { cn } from "@/lib/utils";
 
-export default function MarkdownRenderer({ text }: { text: string }) {
+export default function MarkdownRenderer({
+	text,
+	...props
+}: { text: string } & React.DetailedHTMLProps<
+	React.HTMLAttributes<HTMLDivElement>,
+	HTMLDivElement
+>) {
 	return (
-		<div className="prose dark:prose-invert">
+		<div
+			{...props}
+			className={cn("prose dark:prose-invert", props.className)}
+		>
 			<Markdown
 				components={{ pre: CodeBlock }}
 				remarkPlugins={[remarkMath]}

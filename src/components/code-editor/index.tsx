@@ -25,7 +25,7 @@ export default function CodeEditor() {
 				<LanguageSelector
 					isLoading={isLoading}
 					availableLanguages={availableLanguages.map((language) => ({
-						label: language.label,
+						label: language.name,
 						value: language.id,
 					}))}
 					selectedLanguage={selectedLanguage?.id ?? null}
@@ -50,7 +50,7 @@ export default function CodeEditor() {
 					</Tooltip>
 				</div>
 			</div>
-			<MonacoEditor language={selectedLanguage?.monacoValue} />
+			<MonacoEditor language={selectedLanguage?.monacoId} />
 		</div>
 	);
 }

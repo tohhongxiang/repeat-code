@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import getLanguages from "@/api/get-languages";
+import getLanguages from "@/lib/language/get-languages";
 
 export default function useLanguage() {
 	const [selectedLanguageId, setSelectedLanguageId] = useState<

@@ -6,8 +6,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LanguageSelectorProps {
 	availableLanguages: Array<{ label: string; value: string }>;
@@ -31,7 +30,7 @@ export default function LanguageSelector({
 	if (isLoading) {
 		return (
 			<div>
-				<Skeleton className="h-8 w-32" />
+				<Skeleton className="h-8 w-64" />
 			</div>
 		);
 	}
@@ -42,7 +41,7 @@ export default function LanguageSelector({
 			value={selectedLanguage}
 			onValueChange={handleValueChange}
 		>
-			<SelectTrigger className="w-32">
+			<SelectTrigger className="w-64">
 				<SelectValue placeholder="Language" />
 			</SelectTrigger>
 			<SelectContent>
