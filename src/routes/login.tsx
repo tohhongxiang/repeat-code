@@ -30,13 +30,13 @@ function RouteComponent() {
 	const { redirect: redirectTo } = Route.useSearch();
 
 	return (
-		<div className="flex min-h-screen w-full">
+		<div className="flex w-full py-32">
 			<div className="relative flex flex-1 flex-col items-center justify-center bg-background p-6 md:p-10">
 				<div className="w-full max-w-sm">
 					<div className="flex flex-col gap-6">
 						<Card>
 							<CardHeader className="text-center">
-								<div className="mb-8 flex items-center justify-center gap-3">
+								<div className="mb-4 flex items-center justify-center gap-3">
 									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">
 										RC
 									</div>
@@ -45,7 +45,8 @@ function RouteComponent() {
 									</span>
 								</div>
 								<CardDescription>
-									Login with your Github account
+									Get started by clicking one of the options
+									below
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
@@ -84,7 +85,7 @@ function RouteComponent() {
 							</CardContent>
 						</Card>
 						<FieldDescription className="px-6 text-center">
-							By clicking continue, you agree to our{" "}
+							By signing up, you agree to our{" "}
 							<a
 								href="#"
 								className="underline-offset-2 hover:text-primary"

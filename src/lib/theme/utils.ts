@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
-import * as z from "zod";
+import z from "zod";
 
 const postThemeValidator = z.union([z.literal("light"), z.literal("dark")]);
 export type T = z.infer<typeof postThemeValidator>;

@@ -3,8 +3,10 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import Header from "@/components/header";
-import ThemeProvider from "@/components/theme-provider";
-import { getThemeServerFn } from "@/lib/theme";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import QueryClientProvider from "@/lib/query-client/provider";
+import ThemeProvider from "@/lib/theme/provider";
+import { getThemeServerFn } from "@/lib/theme/utils";
 
 import appCss from "../styles.css?url";
 
@@ -19,13 +21,17 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "Repeat Code",
 			},
 		],
 		links: [
 			{
 				rel: "stylesheet",
 				href: appCss,
+			},
+			{
+				rel: "stylesheet",
+				href: "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css",
 			},
 		],
 	}),
@@ -40,11 +46,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<head>
 				<HeadContent />
 			</head>
-			<body className="font-sans antialiased">
-				<ThemeProvider theme={theme}>
-					<Header />
-					{children}
-				</ThemeProvider>
+			<body className="flex h-screen flex-col font-sans antialiased">
+				<QueryClientProvider>
+					<ThemeProvider theme={theme}>
+						<TooltipProvider>
+							<Header />
+							<main className="min-h-0 flex-1">{children}</main>
+						</TooltipProvider>
+					</ThemeProvider>
+				</QueryClientProvider>
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",

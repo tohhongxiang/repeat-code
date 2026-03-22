@@ -31,7 +31,7 @@ export default function Header() {
 	};
 
 	return (
-		<nav className="mx-auto flex flex-row justify-between px-8 py-4">
+		<nav className="mx-auto flex w-full flex-row items-center justify-between px-8 py-4">
 			<Link to="/">
 				<h2>RepeatCode</h2>
 			</Link>
@@ -39,12 +39,16 @@ export default function Header() {
 				<Link to="/about">
 					<p>About</p>
 				</Link>
-				<Link to="/about">
-					<p>Page 1</p>
-				</Link>
-				<Link to="/about">
-					<p>Page 2</p>
-				</Link>
+				{data?.user && (
+					<>
+						<Link to="/dashboard">
+							<p>Dashboard</p>
+						</Link>
+						<Link to="/problems">
+							<p>Problems</p>
+						</Link>
+					</>
+				)}
 			</div>
 			<div className="flex flex-row items-center justify-center gap-2">
 				{data?.user ? (
