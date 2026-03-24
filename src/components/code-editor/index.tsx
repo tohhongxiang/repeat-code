@@ -8,23 +8,26 @@ import {
 } from "@/components/ui/tooltip";
 import type { Language } from "@/lib/language/types";
 
+import ConfirmationDialog from "../confirmation-dialog";
 import LanguageSelector from "./language-selector";
 import MonacoEditor from "./monaco-editor";
 
 interface CodeEditorProps {
-	availableLanguages: Array<Language>;
+	availableLanguages?: Array<Language>;
 	selectedLanguage?: Language;
-	onSelectedLanguageChange: (languageID: Language["id"]) => void;
-	code: string;
-	onCodeChange: (value: string) => void;
+	onSelectedLanguageChange?: (languageID: Language["id"]) => void;
+	code?: string;
+	onCodeChange?: (value: string) => void;
+	onCodeReset?: () => void;
 }
 
 export default function CodeEditor({
-	availableLanguages,
+	availableLanguages = [],
 	selectedLanguage,
 	onSelectedLanguageChange,
-	code,
+	code = "",
 	onCodeChange,
+	onCodeReset,
 }: CodeEditorProps) {
 	return (
 		<div className="flex min-h-0 flex-1 flex-col">
@@ -38,13 +41,21 @@ export default function CodeEditor({
 					<Tooltip>
 						<TooltipTrigger
 							render={
-								<Button
-									variant="ghost"
-									size="icon"
-									className="group"
-								>
-									<RotateCcw className="transition-transform duration-100 group-hover:-rotate-45" />
-								</Button>
+								<ConfirmationDialog
+									title="Reset Code?"
+									description="This action is permanent! You will reset your code back to the default code."
+									confirmButtonText="Reset"
+									trigger={
+										<Button
+											variant="ghost"
+											size="icon"
+											className="group"
+										>
+											<RotateCcw className="transition-transform duration-100 group-hover:-rotate-45" />
+										</Button>
+									}
+									onConfirm={onCodeReset}
+								/>
 							}
 						/>
 						<TooltipContent side="bottom">

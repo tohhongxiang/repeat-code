@@ -19,8 +19,9 @@ export default function ProblemLayout() {
 
 	const {
 		availableLanguages,
-		userCode,
-		setUserCode,
+		code,
+		setCode,
+		resetCodeToStarterCode,
 		selectedLanguage,
 		setSelectedLanguageID,
 	} = useProblemCodeEditor(problem);
@@ -45,8 +46,9 @@ export default function ProblemLayout() {
 					availableLanguages={availableLanguages}
 					selectedLanguage={selectedLanguage}
 					onSelectedLanguageChange={setSelectedLanguageID}
-					code={userCode}
-					onCodeChange={setUserCode}
+					code={code}
+					onCodeChange={setCode}
+					onCodeReset={resetCodeToStarterCode}
 				/>
 				<div className="p-4">
 					<p>Test case editor</p>

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import useLocalStorageState from "@/hooks/use-local-storage-state";
 import type { Language } from "@/lib/language/types";
@@ -29,17 +29,22 @@ export default function useProblemCodeEditor(problem?: Problem) {
 		[problem, selectedLanguage],
 	);
 
-	const [userCode, setUserCode] = useLocalStorageState(
+	const [code, setCode] = useLocalStorageState(
 		getStorageKey(problem?.id, selectedLanguage?.id),
 		starterCode,
 	);
+
+	const resetCodeToStarterCode = useCallback(() => {
+		setCode(starterCode);
+	}, [starterCode, setCode]);
 
 	return {
 		availableLanguages,
 		selectedLanguage,
 		setSelectedLanguageID,
-		userCode,
-		setUserCode,
+		code,
+		setCode,
+		resetCodeToStarterCode,
 	};
 }
 

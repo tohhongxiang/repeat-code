@@ -10,14 +10,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Language } from "@/lib/language/types";
 
 interface LanguageSelectorProps {
-	availableLanguages: Array<Language>;
+	availableLanguages?: Array<Language>;
 	selectedLanguageID?: Language["id"] | null | undefined;
-	onSelectedLanguageChange: (languageID: Language["id"]) => void;
+	onSelectedLanguageChange?: (languageID: Language["id"]) => void;
 	isLoading?: boolean;
 }
 
 export default function LanguageSelector({
-	availableLanguages,
+	availableLanguages = [],
 	selectedLanguageID,
 	onSelectedLanguageChange,
 	isLoading = false,
@@ -27,7 +27,7 @@ export default function LanguageSelector({
 			return;
 		}
 
-		onSelectedLanguageChange(languageID);
+		onSelectedLanguageChange?.(languageID);
 	};
 
 	if (isLoading) {
