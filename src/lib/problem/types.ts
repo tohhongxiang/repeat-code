@@ -1,5 +1,7 @@
 import z from "zod";
 
+import { languageSchema } from "../language/types";
+
 export const DIFFICULTIES = {
 	EASY: "easy",
 	MEDIUM: "medium",
@@ -29,6 +31,12 @@ export const problemSchema = z.object({
 	followUps: z.array(z.string()),
 	topics: z.array(topicSchema),
 	hints: z.array(z.string()),
+	starterCode: z.array(
+		z.object({
+			language: languageSchema,
+			code: z.string(),
+		}),
+	),
 });
 
 export type Problem = z.infer<typeof problemSchema>;

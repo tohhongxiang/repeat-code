@@ -6,30 +6,33 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { Language } from "@/lib/language/types";
 
 import LanguageSelector from "./language-selector";
 import MonacoEditor from "./monaco-editor";
-import useLanguage from "./use-language";
 
-export default function CodeEditor() {
-	const {
-		availableLanguages,
-		isLoading,
-		selectedLanguage,
-		setSelectedLanguageId,
-	} = useLanguage();
+interface CodeEditorProps {
+	availableLanguages: Array<Language>;
+	selectedLanguage?: Language;
+	onSelectedLanguageChange: (languageID: Language["id"]) => void;
+	code: string;
+	onCodeChange: (value: string) => void;
+}
 
+export default function CodeEditor({
+	availableLanguages,
+	selectedLanguage,
+	onSelectedLanguageChange,
+	code,
+	onCodeChange,
+}: CodeEditorProps) {
 	return (
 		<div className="flex min-h-0 flex-1 flex-col">
 			<div className="flex flex-row items-center justify-between px-4 py-2">
 				<LanguageSelector
-					isLoading={isLoading}
-					availableLanguages={availableLanguages.map((language) => ({
-						label: language.name,
-						value: language.id,
-					}))}
-					selectedLanguage={selectedLanguage?.id ?? null}
-					onSelectedLanguageChange={setSelectedLanguageId}
+					availableLanguages={availableLanguages}
+					selectedLanguageID={selectedLanguage?.id}
+					onSelectedLanguageChange={onSelectedLanguageChange}
 				/>
 				<div className="flex flex-row items-center justify-end gap-2">
 					<Tooltip>
@@ -50,7 +53,11 @@ export default function CodeEditor() {
 					</Tooltip>
 				</div>
 			</div>
-			<MonacoEditor language={selectedLanguage?.monacoId} />
+			<MonacoEditor
+				language={selectedLanguage?.monacoId}
+				code={code}
+				onCodeChange={onCodeChange}
+			/>
 		</div>
 	);
 }

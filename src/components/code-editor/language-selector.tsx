@@ -7,24 +7,27 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Language } from "@/lib/language/types";
 
 interface LanguageSelectorProps {
-	availableLanguages: Array<{ label: string; value: string }>;
-	selectedLanguage: string | null;
-	onSelectedLanguageChange: (value: string) => void;
+	availableLanguages: Array<Language>;
+	selectedLanguageID?: Language["id"] | null | undefined;
+	onSelectedLanguageChange: (languageID: Language["id"]) => void;
 	isLoading?: boolean;
 }
 
 export default function LanguageSelector({
 	availableLanguages,
-	selectedLanguage,
+	selectedLanguageID,
 	onSelectedLanguageChange,
 	isLoading = false,
 }: LanguageSelectorProps) {
-	const handleValueChange = (value: string | null) => {
-		if (value !== null) {
-			onSelectedLanguageChange(value);
+	const handleValueChange = (languageID: string | null) => {
+		if (!languageID) {
+			return;
 		}
+
+		onSelectedLanguageChange(languageID);
 	};
 
 	if (isLoading) {
@@ -35,10 +38,15 @@ export default function LanguageSelector({
 		);
 	}
 
+	const items = availableLanguages.map((language) => ({
+		label: language.name,
+		value: language.id,
+	}));
+
 	return (
 		<Select
-			items={availableLanguages}
-			value={selectedLanguage}
+			items={items}
+			value={selectedLanguageID ?? null} // null instead of undefined to prevent uncontrolled input
 			onValueChange={handleValueChange}
 		>
 			<SelectTrigger className="w-64">
@@ -46,9 +54,9 @@ export default function LanguageSelector({
 			</SelectTrigger>
 			<SelectContent>
 				<SelectGroup>
-					{availableLanguages.map((language) => (
-						<SelectItem key={language.value} value={language.value}>
-							{language.label}
+					{items.map(({ label, value }) => (
+						<SelectItem key={value} value={value}>
+							{label}
 						</SelectItem>
 					))}
 				</SelectGroup>

@@ -9,9 +9,15 @@ import { useTheme } from "../../lib/theme/provider";
 
 interface MonacoEditorProps {
 	language?: string | undefined;
+	code?: string | undefined;
+	onCodeChange?: (value: string) => void;
 }
 
-export default function MonacoEditor({ language }: MonacoEditorProps) {
+export default function MonacoEditor({
+	language,
+	code,
+	onCodeChange,
+}: MonacoEditorProps) {
 	const { theme } = useTheme();
 	const monaco = useMonaco();
 
@@ -41,7 +47,13 @@ export default function MonacoEditor({ language }: MonacoEditorProps) {
 						? HIGHLIGHT_THEME.LIGHT
 						: HIGHLIGHT_THEME.DARK
 				}
-				options={{ minimap: { enabled: false } }}
+				value={code}
+				onChange={(value) => onCodeChange?.(value ?? "")}
+				options={{
+					minimap: { enabled: false },
+					tabSize: 4,
+					fontSize: 16,
+				}}
 			/>
 		</div>
 	);
