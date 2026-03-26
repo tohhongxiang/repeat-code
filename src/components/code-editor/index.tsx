@@ -41,21 +41,24 @@ export default function CodeEditor({
 					<Tooltip>
 						<TooltipTrigger
 							render={
-								<ConfirmationDialog
-									title="Reset Code?"
-									description="This action is permanent! You will reset your code back to the default code."
-									confirmButtonText="Reset"
-									trigger={
-										<Button
-											variant="ghost"
-											size="icon"
-											className="group"
-										>
-											<RotateCcw className="transition-transform duration-100 group-hover:-rotate-45" />
-										</Button>
-									}
-									onConfirm={onCodeReset}
-								/>
+								// Wrap in div so that tool tip content still shows when focus-visible
+								<div>
+									<ConfirmationDialog
+										title="Reset Code?"
+										description="This action is permanent! You will reset your code back to the default code."
+										confirmButtonText="Reset"
+										trigger={
+											<Button
+												variant="ghost"
+												size="icon"
+												className="group"
+											>
+												<RotateCcw className="transition-transform duration-100 group-focus-within:-rotate-45 group-hover:-rotate-45" />
+											</Button>
+										}
+										onConfirm={onCodeReset}
+									/>
+								</div>
 							}
 						/>
 						<TooltipContent side="bottom">

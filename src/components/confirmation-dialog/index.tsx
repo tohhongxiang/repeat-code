@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { isValidElement } from "react";
+import { forwardRef, isValidElement } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,17 +30,20 @@ interface ConfirmationDialogProps {
 	onCancel?: () => void;
 }
 
-export default function ConfirmationDialog({
-	trigger,
-	title,
-	description,
-	variant = "destructive",
-	confirmButtonText = "Confirm",
-	confirmButtonIcon,
-	cancelButtonText = "Cancel",
-	onConfirm,
-	onCancel,
-}: ConfirmationDialogProps) {
+export default forwardRef(function ConfirmationDialog(
+	{
+		trigger,
+		title,
+		description,
+		variant = "destructive",
+		confirmButtonText = "Confirm",
+		confirmButtonIcon,
+		cancelButtonText = "Cancel",
+		onConfirm,
+		onCancel,
+	}: ConfirmationDialogProps,
+	ref: React.Ref<HTMLButtonElement> | undefined,
+) {
 	const { state, actions } = useConfirmationDialogReducer();
 
 	const handleCancel = () => {
@@ -69,9 +72,9 @@ export default function ConfirmationDialog({
 			onOpenChange={(open) => (open ? actions.open() : actions.close())}
 		>
 			{isValidElement(trigger) ? (
-				<DialogTrigger render={trigger} />
+				<DialogTrigger render={trigger} ref={ref} />
 			) : (
-				<DialogTrigger>{trigger}</DialogTrigger>
+				<DialogTrigger ref={ref}>{trigger}</DialogTrigger>
 			)}
 			<DialogContent>
 				<DialogHeader>
@@ -116,4 +119,4 @@ export default function ConfirmationDialog({
 			</DialogContent>
 		</Dialog>
 	);
-}
+});
