@@ -37,6 +37,17 @@ export const problemSchema = z.object({
 			code: z.string(),
 		}),
 	),
+	testCases: z.array(
+		z.object({
+			inputs: z.array(
+				z.object({
+					name: z.string().min(1),
+					value: z.string().min(1),
+				}),
+			),
+			expected: z.string(),
+		}),
+	),
 });
 
 export type Problem = z.infer<typeof problemSchema>;

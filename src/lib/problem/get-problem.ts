@@ -90,6 +90,32 @@ var twoSum = function(nums, target) {
 };`,
 			},
 		],
+		testCases: [
+			{
+				inputs: [
+					{
+						name: "nums",
+						value: "[1, 2, 3, 4, 5]",
+					},
+					{ name: "target", value: "6" },
+				],
+				expected: "[0, 4]",
+			},
+			{
+				inputs: [
+					{ name: "nums", value: "[1, 2]" },
+					{ name: "target", value: "3" },
+				],
+				expected: "[0, 1]",
+			},
+			{
+				inputs: [
+					{ name: "nums", value: "[1, 2, 3, 6]" },
+					{ name: "target", value: "5" },
+				],
+				expected: "[1, 2]",
+			},
+		],
 	};
 
 	return problemSchema.parse(result);

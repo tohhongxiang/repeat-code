@@ -4,6 +4,8 @@ import getProblem from "@/lib/problem/get-problem";
 
 import CodeEditor from "../code-editor";
 import Loading from "./loading";
+import ProblemConsole from "./problem-console";
+import type { TestCase } from "./problem-console/types";
 import ProblemDetailsPanel from "./problem-details-panel";
 import useProblemCodeEditor from "./use-problem-code-editor";
 
@@ -25,6 +27,16 @@ export default function ProblemLayout() {
 		selectedLanguage,
 		setSelectedLanguageID,
 	} = useProblemCodeEditor(problem);
+
+	const handleRun = async (testCases: Array<TestCase>) => {
+		console.log({ problem, testCases, code, selectedLanguage });
+		await new Promise((res) => setTimeout(res, 2000));
+	};
+
+	const handleSubmit = async () => {
+		await new Promise((res) => setTimeout(res, 2000));
+		console.log("Submit");
+	};
 
 	if (isPending) {
 		return <Loading />;
@@ -50,8 +62,12 @@ export default function ProblemLayout() {
 					onCodeChange={setCode}
 					onCodeReset={resetCodeToStarterCode}
 				/>
-				<div className="p-4">
-					<p>Test case editor</p>
+				<div className="p-2">
+					<ProblemConsole
+						initialTestCases={problem.testCases}
+						onRun={handleRun}
+						onSubmit={handleSubmit}
+					/>
 				</div>
 			</div>
 		</div>
