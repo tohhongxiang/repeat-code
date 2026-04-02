@@ -1,5 +1,4 @@
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,7 +10,7 @@ function ScrollArea({
 	return (
 		<ScrollAreaPrimitive.Root
 			data-slot="scroll-area"
-			className={cn("relative", className)}
+			className={cn("relative overflow-auto", className)}
 			{...props}
 		>
 			<ScrollAreaPrimitive.Viewport

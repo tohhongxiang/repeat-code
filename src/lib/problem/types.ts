@@ -14,6 +14,39 @@ export const topicSchema = z.object({
 	slug: z.string(),
 });
 
+export const testCaseSchema = z.object({
+	operations: z.array(z.string()),
+	arguments: z.array(z.array(z.json())),
+	expected: z.array(z.json()),
+});
+
+export type TestCase = z.infer<typeof testCaseSchema>;
+
+const VALID_TYPES = [
+	"void",
+	"int",
+	"int[]",
+	"int[][]",
+	"float",
+	"float[]",
+	"float[][]",
+	"boolean",
+	"boolean[]",
+	"boolean[][]",
+	"string",
+	"string[]",
+	"string[][]",
+	"ListNode",
+	"TreeNode",
+];
+
+export const VALIDATORS = {
+	EXACT_MATCH: "EXACT_MATCH",
+	ANY_ORDER: "ANY_ORDER",
+} as const;
+
+export type ProblemValidator = (typeof VALIDATORS)[keyof typeof VALIDATORS];
+
 export const problemSchema = z.object({
 	id: z.string(),
 	slug: z.string(),
@@ -37,17 +70,26 @@ export const problemSchema = z.object({
 			code: z.string(),
 		}),
 	),
-	testCases: z.array(
-		z.object({
-			inputs: z.array(
-				z.object({
-					name: z.string().min(1),
-					value: z.string().min(1),
-				}),
-			),
-			expected: z.string(),
+	api: z.object({
+		entry: z.object({
+			type: z.enum(["class", "method"]), // function/class problem
+			name: z.string(), // logical function name
 		}),
-	),
+		methods: z.array(
+			z.object({
+				name: z.string(),
+				parameters: z.array(
+					z.object({ name: z.string(), type: z.enum(VALID_TYPES) }),
+				),
+				returnType: z.enum(VALID_TYPES).optional(),
+			}),
+		),
+	}),
+	execution: z.object({
+		validator: z.enum(VALIDATORS),
+	}),
+	testCases: z.array(testCaseSchema),
+	referenceSolution: z.object({ languageID: z.string(), code: z.string() }),
 });
 
 export type Problem = z.infer<typeof problemSchema>;

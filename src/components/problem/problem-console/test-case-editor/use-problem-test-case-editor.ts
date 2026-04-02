@@ -1,29 +1,55 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
-import { testCaseSchema } from "./types";
-import type { TestCase } from "./types";
+import type { Problem } from "@/lib/problem/types";
 
-const formSchema = z.object({
-	testCases: z.array(testCaseSchema),
+import convertProblemTestCasesToInputs from "./utils/convert-problem-test-cases-to-input";
+
+const editorTestCaseSchema = z.object({
+	inputs: z.array(
+		z.object({
+			label: z.string(),
+			value: z.string(),
+		}),
+	),
 });
 
+const editorSchema = z.object({
+	testCases: z.array(editorTestCaseSchema),
+});
+
+export type EditorTestCase = z.infer<typeof editorTestCaseSchema>;
+
 const MAX_TEST_CASES = 5;
-export default function useTestCaseEditor({
-	initialTestCases,
+export default function useTestCaseEditor(
+	problem?: Problem,
 	maxTestCases = MAX_TEST_CASES,
-}: {
-	initialTestCases: Array<TestCase>;
-	maxTestCases?: number;
-}) {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+) {
+	const initialTestCases = useMemo(
+		() =>
+			problem
+				? problem.testCases.map((testCase) => {
+						return convertProblemTestCasesToInputs(
+							testCase,
+							problem.api.methods,
+						);
+					})
+				: [],
+		[problem],
+	);
+
+	const form = useForm<z.infer<typeof editorSchema>>({
+		resolver: zodResolver(editorSchema),
 		defaultValues: {
 			testCases: initialTestCases,
 		},
 	});
+
+	useEffect(() => {
+		form.reset({ testCases: initialTestCases });
+	}, [form, initialTestCases]);
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,

@@ -53,6 +53,7 @@ export default function MonacoEditor({
 					minimap: { enabled: false },
 					tabSize: 4,
 					fontSize: 16,
+					insertSpaces: false,
 				}}
 			/>
 		</div>

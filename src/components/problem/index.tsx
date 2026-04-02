@@ -1,49 +1,41 @@
-import { useQuery } from "@tanstack/react-query";
-
-import getProblem from "@/lib/problem/get-problem";
-
 import CodeEditor from "../code-editor";
+import ErrorDisplay from "../error-display";
+import useProblemQuery from "./hooks/use-problem";
+import useProblemCodeEditor from "./hooks/use-problem-code-editor";
+import useProblemRunner from "./hooks/use-problem-runner";
+import useProblemSubmitter from "./hooks/use-problem-submitter";
 import Loading from "./loading";
+import ProblemActionBar from "./problem-action-bar";
 import ProblemConsole from "./problem-console";
-import type { TestCase } from "./problem-console/types";
+import useProblemConsoleState from "./problem-console/hooks/use-problem-console-state";
+import useProblemTestCaseEditor from "./problem-console/test-case-editor/use-problem-test-case-editor";
 import ProblemDetailsPanel from "./problem-details-panel";
-import useProblemCodeEditor from "./use-problem-code-editor";
 
 export default function ProblemLayout() {
 	const {
 		data: problem,
-		isPending,
-		error,
-	} = useQuery({
-		queryKey: ["problem", "1"],
-		queryFn: () => getProblem("1"),
+		isPending: isLoadingProblem,
+		error: loadProblemError,
+	} = useProblemQuery("1");
+	const editor = useProblemCodeEditor(problem);
+	const testCaseEditor = useProblemTestCaseEditor(problem);
+	const consoleState = useProblemConsoleState();
+	const problemRunner = useProblemRunner({
+		problem,
+		code: editor.code,
+		selectedLanguage: editor.selectedLanguage,
+		testCaseEditor,
+		onRunStart: () => consoleState.setCurrentTab(consoleState.tabs.OUTPUT),
 	});
 
-	const {
-		availableLanguages,
-		code,
-		setCode,
-		resetCodeToStarterCode,
-		selectedLanguage,
-		setSelectedLanguageID,
-	} = useProblemCodeEditor(problem);
+	const problemSubmitter = useProblemSubmitter();
 
-	const handleRun = async (testCases: Array<TestCase>) => {
-		console.log({ problem, testCases, code, selectedLanguage });
-		await new Promise((res) => setTimeout(res, 2000));
-	};
-
-	const handleSubmit = async () => {
-		await new Promise((res) => setTimeout(res, 2000));
-		console.log("Submit");
-	};
-
-	if (isPending) {
+	if (isLoadingProblem) {
 		return <Loading />;
 	}
 
-	if (error) {
-		return <p>{error.message}</p>;
+	if (loadProblemError) {
+		return <ErrorDisplay error={loadProblemError} />;
 	}
 
 	if (!problem) {
@@ -55,18 +47,28 @@ export default function ProblemLayout() {
 			<ProblemDetailsPanel problem={problem} />
 			<div className="flex flex-1 flex-col rounded-md border">
 				<CodeEditor
-					availableLanguages={availableLanguages}
-					selectedLanguage={selectedLanguage}
-					onSelectedLanguageChange={setSelectedLanguageID}
-					code={code}
-					onCodeChange={setCode}
-					onCodeReset={resetCodeToStarterCode}
+					availableLanguages={editor.availableLanguages}
+					selectedLanguage={editor.selectedLanguage}
+					onSelectedLanguageChange={editor.setSelectedLanguageID}
+					code={editor.code}
+					onCodeChange={editor.setCode}
+					onCodeReset={editor.resetCodeToStarterCode}
 				/>
 				<div className="p-2">
 					<ProblemConsole
-						initialTestCases={problem.testCases}
-						onRun={handleRun}
-						onSubmit={handleSubmit}
+						consoleState={consoleState}
+						testCaseEditor={testCaseEditor}
+						problemRunner={problemRunner}
+					/>
+					<ProblemActionBar
+						onRun={problemRunner.run}
+						onSubmit={problemSubmitter.submit}
+						isRunning={problemRunner.isRunning}
+						isSubmitting={problemSubmitter.isRunning}
+						isDisabled={
+							problemSubmitter.isRunning ||
+							problemRunner.isRunning
+						}
 					/>
 				</div>
 			</div>

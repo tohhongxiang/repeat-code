@@ -1,103 +1,62 @@
 import { SquareCheck, Terminal } from "lucide-react";
-import { useState } from "react";
 
 import LoadingIndicator from "@/components/loading-indicator";
-import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import type useProblemRunner from "../hooks/use-problem-runner";
+import type useProblemConsoleState from "./hooks/use-problem-console-state";
 import TestCaseEditor from "./test-case-editor";
-import TestCaseOutputs from "./test-case-outputs";
-import type { TestCase } from "./types";
-import useTestCaseEditor from "./use-test-case-editor";
+import type useTestCaseEditor from "./test-case-editor/use-problem-test-case-editor";
+import TestSuiteResultDisplay from "./test-suite-result-display";
 
 interface ProblemConsoleProps {
-	initialTestCases: Array<TestCase>;
-	onRun: (testCases: Array<TestCase>) => Promise<void>;
-	onSubmit: () => Promise<void>;
+	consoleState: ReturnType<typeof useProblemConsoleState>;
+	testCaseEditor: ReturnType<typeof useTestCaseEditor>;
+	problemRunner: ReturnType<typeof useProblemRunner>;
 }
 
 export default function ProblemConsole({
-	initialTestCases,
-	onRun,
-	onSubmit,
+	consoleState,
+	testCaseEditor,
+	problemRunner,
 }: ProblemConsoleProps) {
-	const testCaseEditor = useTestCaseEditor({ initialTestCases });
-
-	const [isRunning, setIsRunning] = useState(false);
-
-	const handleRun = async () => {
-		const isValid = await testCaseEditor.validate();
-		if (!isValid) {
-			return;
-		}
-
-		const testCases = testCaseEditor.form.getValues().testCases;
-		setIsRunning(true);
-		await onRun(testCases);
-		setIsRunning(false);
-	};
-
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const handleSubmit = async () => {
-		setIsSubmitting(true);
-		await onSubmit();
-		setIsSubmitting(false);
-	};
-
-	const areActionsDisabled = isSubmitting || isRunning;
 	return (
-		<div>
-			<Tabs defaultValue="test-case-editor">
-				<TabsList variant="line" className="gap-2">
-					<TabsTrigger value="test-case-editor">
-						<SquareCheck />
-						Test Cases
-					</TabsTrigger>
-					<TabsTrigger value="output">
+		<Tabs
+			value={consoleState.currentTab}
+			onValueChange={consoleState.setCurrentTab}
+			className="flex max-h-100 min-h-0 flex-col"
+		>
+			<TabsList variant="line" className="flex-1 shrink-0">
+				<TabsTrigger value={consoleState.tabs.TEST_CASE_EDITOR}>
+					<SquareCheck />
+					Test Cases
+				</TabsTrigger>
+				<TabsTrigger value={consoleState.tabs.OUTPUT}>
+					{problemRunner.isRunning ? (
+						<LoadingIndicator />
+					) : (
 						<Terminal />
-						Output
-					</TabsTrigger>
-				</TabsList>
-				<div className="p-2.5">
-					<TabsContent value="test-case-editor">
+					)}
+					Output
+				</TabsTrigger>
+			</TabsList>
+			<ScrollArea>
+				<div className="px-1 py-2">
+					<TabsContent value={consoleState.tabs.TEST_CASE_EDITOR}>
 						<TestCaseEditor editor={testCaseEditor} />
 					</TabsContent>
-					<TabsContent value="output">
-						<TestCaseOutputs testCases={[]} />
+					<TabsContent value={consoleState.tabs.OUTPUT}>
+						{problemRunner.isRunning ? (
+							<TestSuiteResultDisplay.Loading />
+						) : !problemRunner.result ? (
+							<TestSuiteResultDisplay.Empty />
+						) : (
+							<TestSuiteResultDisplay {...problemRunner.result} />
+						)}
 					</TabsContent>
 				</div>
-			</Tabs>
-			<div className="flex flex-row items-center justify-end gap-2 pt-2">
-				<Button
-					size="lg"
-					variant="secondary"
-					onClick={handleRun}
-					disabled={areActionsDisabled}
-				>
-					{isRunning ? (
-						<>
-							<LoadingIndicator />
-							<span>Running...</span>
-						</>
-					) : (
-						"Run"
-					)}
-				</Button>
-				<Button
-					size="lg"
-					onClick={handleSubmit}
-					disabled={areActionsDisabled}
-				>
-					{isSubmitting ? (
-						<>
-							<LoadingIndicator />
-							<span>Submitting...</span>
-						</>
-					) : (
-						"Submit"
-					)}
-				</Button>
-			</div>
-		</div>
+			</ScrollArea>
+		</Tabs>
 	);
 }

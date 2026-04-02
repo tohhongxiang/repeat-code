@@ -1,16 +1,16 @@
 import { Album, Lightbulb } from "lucide-react";
 
 import MarkdownRenderer from "@/components/markdown-renderer";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Problem } from "@/lib/problem/types";
-
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-} from "../ui/accordion";
-import { Badge } from "../ui/badge";
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import type { Problem } from "@/lib/problem/types";
+
 import DifficultyBadge from "./difficulty-badge";
 
 export default function ProblemDetailsPanel({ problem }: { problem: Problem }) {

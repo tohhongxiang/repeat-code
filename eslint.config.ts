@@ -14,7 +14,13 @@ const config = [
 	reactHooks.configs.flat.recommended,
 	{
 		files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-		languageOptions: { globals: { ...globals.browser, ...globals.node } },
+		languageOptions: {
+			globals: { ...globals.browser, ...globals.node },
+			parserOptions: {
+				project: "./tsconfig.eslint.json",
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
 	},
 	{
 		rules: {
@@ -22,6 +28,13 @@ const config = [
 			"@typescript-eslint/no-unnecessary-condition": "off",
 			"react/react-in-jsx-scope": "off",
 			"import/order": "off",
+		},
+	},
+	{
+		settings: {
+			react: {
+				version: "19.2", // detect does not work, refer to: https://github.com/jsx-eslint/eslint-plugin-react/issues/3977
+			},
 		},
 	},
 ];

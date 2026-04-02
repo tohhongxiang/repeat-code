@@ -7,8 +7,8 @@ import { db } from "@/db/drizzle";
 export const auth = betterAuth({
 	socialProviders: {
 		github: {
-			clientId: process.env.GITHUB_CLIENT_ID!,
-			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			clientId: process.env?.["GITHUB_CLIENT_ID"] ?? "",
+			clientSecret: process.env?.["GITHUB_CLIENT_SECRET"],
 		},
 	},
 	database: drizzleAdapter(db, { provider: "pg" }),
